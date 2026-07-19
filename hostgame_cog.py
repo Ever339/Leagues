@@ -189,6 +189,20 @@ class HostGameCog(commands.Cog):
             await interaction.response.send_message("Only the host can end the game.", ephemeral=True)
             return
 
+        # Check if game is already finished
+        if game.get("finished") or game.get("locked"):
+            await interaction.response.send_message(
+                "This game has already been ended.", ephemeral=True
+            )
+            return
+
+        # Mark game as finished and locked to prevent duplicate end calls
+        games = load_games()
+        if gameid in games:
+            games[gameid]["finished"] = True
+            games[gameid]["locked"] = True
+            save_games(games)
+
         delete_game(gameid)
         thread = await get_thread(interaction, game)
 
@@ -396,3 +410,4 @@ class HostGameCog(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(HostGameCog(bot))
+

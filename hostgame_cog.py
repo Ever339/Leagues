@@ -270,7 +270,7 @@ class HostGameCog(commands.Cog):
         if len(players) + 1 < required_players:
             await interaction.response.send_message(
                 f"You need **{required_players}** total players (including the host) before creating teams.\n"
-                f"Current: **{len(players) + 1}/{required_players}**.",
+                f"Current: **{len(players)}/{required_players}**.",
                 ephemeral=True,
             )
             return

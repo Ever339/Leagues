@@ -265,9 +265,16 @@ class HostGameCog(commands.Cog):
             host_name = host_member.display_name if host_member else game["host_name"]
             players.append({"id": game["host_id"], "display_name": host_name})
 
-        if len(players) < 2:
-            await interaction.response.send_message("Not enough players have joined yet.", ephemeral=True)
-            return
+        required_players = game["players_needed"] + 1  # +1 because the host plays too
+
+        
+    if len(players) + 1 < required_players:
+    await interaction.response.send_message(
+        f"You need **{required_players}** total players (including the host) before creating teams.\n"
+        f"Current: **{len(players) + 1}/{required_players}**.",
+        ephemeral=True,
+    )
+    return
 
         # Assign each player a numeric tier rank (higher = better)
         tier_rank = {t: len(TIER_ROLES) - i for i, t in enumerate(TIER_ROLES)}

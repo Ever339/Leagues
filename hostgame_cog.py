@@ -47,7 +47,7 @@ def resolve_game(interaction: discord.Interaction):
     
     # 1. Try finding by thread or channel ID
     for g_id, g_data in games.items():
-        if g_data.get("thread_id") == channel_id or g_data.get("channel_id") == channel_id:
+        if g_data.get("thread") == channel_id or g_data.get("channel") == channel_id:
             return g_id, g_data
                 
     # 2. Try finding by host ID
@@ -77,9 +77,9 @@ def resolve_game(interaction: discord.Interaction):
 
 
 async def get_thread(interaction: discord.Interaction, game: dict) -> discord.Thread:
-    thread = interaction.guild.get_thread(game["thread_id"])
+    thread = interaction.guild.get_thread(game["thread"])
     if thread is None:
-        thread = await interaction.guild.fetch_channel(game["thread_id"])
+        thread = await interaction.guild.fetch_channel(game["thread"])
     return thread
 
 
@@ -397,7 +397,7 @@ class HostGameCog(commands.Cog):
         sub_embed.timestamp = discord.utils.utcnow()
 
         # Send to original hosting channel, not the thread
-        hosting_channel = await get_channel(interaction.guild, game.get("channel_id"))
+        hosting_channel = await get_channel(interaction.guild, game.get("channel"))
         await hosting_channel.send(content=ping_mention, embed=sub_embed, allowed_mentions=discord.AllowedMentions(roles=True))
         await interaction.response.send_message("Sub announcement posted in the hosting channel.", ephemeral=True)
 

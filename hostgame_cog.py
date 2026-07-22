@@ -77,9 +77,9 @@ def resolve_game(interaction: discord.Interaction):
 
 
 async def get_thread(interaction: discord.Interaction, game: dict) -> discord.Thread:
-    thread = interaction.guild.get_thread(game["thread"])
+    thread = interaction.guild.get_thread(game["thread_id"])
     if thread is None:
-        thread = await interaction.guild.fetch_channel(game["thread"])
+        thread = await interaction.guild.fetch_channel(game["thread_id"])
     return thread
 
 

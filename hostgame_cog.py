@@ -56,6 +56,13 @@ async def get_thread(interaction: discord.Interaction, game: dict) -> discord.Th
     return thread
 
 
+async def get_channel(guild: discord.Guild, channel_id: int) -> discord.TextChannel:
+    channel = guild.get_channel(channel_id)
+    if channel is None:
+        channel = await guild.fetch_channel(channel_id)
+    return channel
+
+
 class HostGameCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -362,9 +369,10 @@ class HostGameCog(commands.Cog):
         sub_embed.set_footer(text=f"Game ID: {gameid}")
         sub_embed.timestamp = discord.utils.utcnow()
 
-        thread = await get_thread(interaction, game)
-        await thread.send(content=ping_mention, embed=sub_embed, allowed_mentions=discord.AllowedMentions(roles=True))
-        await interaction.response.send_message("Sub announcement posted.", ephemeral=True)
+        # Send to original hosting channel, not the thread
+        hosting_channel = await get_channel(interaction.guild, game.get("channel_id"))
+        await hosting_channel.send(content=ping_mention, embed=sub_embed, allowed_mentions=discord.AllowedMentions(roles=True))
+        await interaction.response.send_message("Sub announcement posted in the hosting channel.", ephemeral=True)
 
     # ─── /remove ──────────────────────────────────────────────────────────────
 

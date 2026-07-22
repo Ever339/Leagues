@@ -400,30 +400,21 @@ class HostGameCog(commands.Cog):
 
         # Send to original hosting channel, not the thread
                 # Send to original hosting channel, not the thread
-        try:
-    hosting_channel = await get_channel(interaction.guild, game["channel"])
-    original_message = await hosting_channel.fetch_message(game["message"])
+        hosting_channel = await get_channel(interaction.guild, game["channel"])
 
-    await original_message.reply(
-        content=ping_mention,
-        embed=sub_embed,
-        allowed_mentions=discord.AllowedMentions(roles=True),
-        mention_author=False,
-    )
+original_message = await hosting_channel.fetch_message(game["message"])
 
-    await interaction.response.send_message(
-        "Sub announcement posted.",
-        ephemeral=True,
-    )
+await original_message.reply(
+    content=ping_mention,
+    embed=sub_embed,
+    allowed_mentions=discord.AllowedMentions(roles=True),
+    mention_author=False,
+)
 
-except Exception as e:
-    print("SUB ERROR:", repr(e))
-
-    if not interaction.response.is_done():
-        await interaction.response.send_message(
-            f"Error: {e}",
-            ephemeral=True,
-        )
+await interaction.response.send_message(
+    "Sub announcement posted.",
+    ephemeral=True,
+)
 
     # ─── /remove ──────────────────────────────────────────────────────────────
 

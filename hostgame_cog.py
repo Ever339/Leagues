@@ -62,8 +62,8 @@ def resolve_game(interaction: discord.Interaction):
         mock_game = {
             "host_id": interaction.user.id,
             "host_name": interaction.user.display_name,
-            "thread_id": channel_id,
-            "channel_id": interaction.channel.parent_id,
+            "thread": channel_id,
+            "channel": interaction.channel.parent_id,
             "players": [],
             "players_needed": 1,
             "finished": False,

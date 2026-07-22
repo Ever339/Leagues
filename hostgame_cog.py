@@ -265,29 +265,27 @@ class HostGameCog(commands.Cog):
             host_name = host_member.display_name if host_member else game["host_name"]
             players.append({"id": game["host_id"], "display_name": host_name})
 
-        required_players = game["players_needed"] + 1
+                required_players = game["players_needed"] + 1
 
-if len(players) + 1 < required_players:
-    await interaction.response.send_message(
-        f"You need **{required_players}** total players (including the host) before creating teams.\n"
-        f"Current: **{len(players) + 1}/{required_players}**.",
-        ephemeral=True,
-    )
-    return
+        if len(players) + 1 < required_players:
+            await interaction.response.send_message(
+                f"You need **{required_players}** total players (including the host) before creating teams.\n"
+                f"Current: **{len(players) + 1}/{required_players}**.",
+                ephemeral=True,
+            )
+            return
 
-# Assign each player a numeric tier rank (higher = better)
-tier_rank = {t: len(TIER_ROLES) - i for i, t in enumerate(TIER_ROLES)}
+        # Assign each player a numeric tier rank (higher = better)
+        tier_rank = {t: len(TIER_ROLES) - i for i, t in enumerate(TIER_ROLES)}
+
         ranked = []
         for p in players:
             tier = get_player_tier(interaction.guild, p["id"])
             ranked.append((p, tier, tier_rank.get(tier, 0)))
 
-        # Shuffle within same rank so equal-tier players are randomly ordered
         random.shuffle(ranked)
         ranked.sort(key=lambda x: x[2], reverse=True)
 
-        # Snake draft: A, B, B, A, A, B, B, A …
-        # Ensures no team ever stacks with the odd player out from any tier
         team_a, team_b = [], []
         for i, (p, tier, _) in enumerate(ranked):
             pair = i // 2
@@ -315,7 +313,6 @@ tier_rank = {t: len(TIER_ROLES) - i for i, t in enumerate(TIER_ROLES)}
         thread = await get_thread(interaction, game)
         await thread.send(embed=embed)
         await interaction.response.send_message("Teams created in the thread.", ephemeral=True)
-
     # ─── /add ─────────────────────────────────────────────────────────────────
 
     @app_commands.command(name="add", description="Manually add a member to the game.")

@@ -42,18 +42,25 @@ def get_player_tier(guild: discord.Guild, user_id: int) -> str | None:
 
 
 def resolve_game(interaction: discord.Interaction):
-    channel = interaction.channel
     channel_id = interaction.channel_id
     
-    # 1. Try looking up by the thread/channel ID directly in your storage
+    # 1. Try lookup by thread ID
     game_id, game = get_game_by_thread(channel_id)
     if game:
         return game_id, game
         
-    # 2. Fallback check if it's an instance of a thread
-    if isinstance(channel, discord.Thread):
-        return get_game_by_thread(channel.id)
-        
+    # 2. Fallback: Check if any active game has this thread ID or text channel ID
+    games = load_games()
+    for g_id, g_data in games.items():
+        if g_data.get("thread") == channel_id or g_data.get("channel_id") == channel_id:
+            if not g_data.get("finished"):
+                return g_id, g_data
+                
+    # 3. Last fallback: Allow the host to use it if they are running it in the server where the game is active
+    for g_id, g_data in games.items():
+        if g_data.get("host_id") == interaction.user.id and not g_data.get("finished"):
+            return g_id, g_data
+
     return None, None
 
 

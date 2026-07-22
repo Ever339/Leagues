@@ -43,10 +43,19 @@ def get_player_tier(guild: discord.Guild, user_id: int) -> str | None:
 
 def resolve_game(interaction: discord.Interaction):
     channel = interaction.channel
-    if not isinstance(channel, discord.Thread):
-        return None, None
-    game_id, game = get_game_by_thread(channel.id)
-    return game_id, game
+    channel_id = interaction.channel_id
+    
+    # 1. Try looking up by the thread/channel ID directly in your storage
+    game_id, game = get_game_by_thread(channel_id)
+    if game:
+        return game_id, game
+        
+    # 2. Fallback check if it's an instance of a thread
+    if isinstance(channel, discord.Thread):
+        return get_game_by_thread(channel.id)
+        
+    return None, None
+
 
 
 async def get_thread(interaction: discord.Interaction, game: dict) -> discord.Thread:

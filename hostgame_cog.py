@@ -398,6 +398,9 @@ class HostGameCog(commands.Cog):
 
         # Send to original hosting channel, not the thread
         hosting_channel = await get_channel(interaction.guild, game.get("channel"))
+
+        original_message = await hosting_channel.fetch_message(game["message"])
+        
         await hosting_channel.send(content=ping_mention, embed=sub_embed, allowed_mentions=discord.AllowedMentions(roles=True))
         await interaction.response.send_message("Sub announcement posted in the hosting channel.", ephemeral=True)
 

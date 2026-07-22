@@ -397,13 +397,16 @@ class HostGameCog(commands.Cog):
         sub_embed.timestamp = discord.utils.utcnow()
 
         # Send to original hosting channel, not the thread
-        hosting_channel = await get_channel(interaction.guild, game.get("channel"))
+         hosting_channel = await get_channel(interaction.guild, game["channel"])
 
-        original_message = await hosting_channel.fetch_message(game["message"])
-        
-        await hosting_channel.send(content=ping_mention, embed=sub_embed, allowed_mentions=discord.AllowedMentions(roles=True))
-        await interaction.response.send_message("Sub announcement posted in the hosting channel.", ephemeral=True)
+original_message = await hosting_channel.fetch_message(game["message"])
 
+await original_message.reply(
+    content=ping_mention,
+    embed=sub_embed,
+    allowed_mentions=discord.AllowedMentions(roles=True),
+    mention_author=False,
+)
     # ─── /remove ──────────────────────────────────────────────────────────────
 
     @app_commands.command(name="remove", description="Remove a player from the game.")

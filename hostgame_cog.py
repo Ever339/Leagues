@@ -42,8 +42,10 @@ def get_player_tier(guild: discord.Guild, user_id: int) -> str | None:
 
 
 def resolve_game(interaction: discord.Interaction):
+    """Resolve game from the current thread."""
     channel = interaction.channel
-    if not isinstance(channel, discord.Thread):
+    # Check if channel is a Thread (works for both discord.Thread and discord.abc.GuildChannel with is_thread())
+    if not isinstance(channel, discord.Thread) and not (hasattr(channel, 'is_thread') and channel.is_thread()):
         return None, None
     game_id, game = get_game_by_thread(channel.id)
     return game_id, game

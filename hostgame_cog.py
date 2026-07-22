@@ -265,7 +265,7 @@ class HostGameCog(commands.Cog):
             host_name = host_member.display_name if host_member else game["host_name"]
             players.append({"id": game["host_id"], "display_name": host_name})
 
-                required_players = game["players_needed"] + 1
+        required_players = game["players_needed"] + 1
 
         if len(players) + 1 < required_players:
             await interaction.response.send_message(

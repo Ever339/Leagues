@@ -47,7 +47,7 @@ def resolve_game(interaction: discord.Interaction):
     
     # 1. Try finding by thread or channel ID
     for g_id, g_data in games.items():
-        if g_data.get("thread") == channel_id or g_data.get("channel_id") == channel_id:
+        if g_data.get("thread_id") == channel_id or g_data.get("channel_id") == channel_id:
             return g_id, g_data
                 
     # 2. Try finding by host ID
@@ -62,7 +62,7 @@ def resolve_game(interaction: discord.Interaction):
         mock_game = {
             "host_id": interaction.user.id,
             "host_name": interaction.user.display_name,
-            "thread": channel_id,
+            "thread_id": channel_id,
             "channel_id": interaction.channel.parent_id,
             "players": [],
             "players_needed": 1,

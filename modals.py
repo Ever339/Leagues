@@ -39,18 +39,20 @@ class JoinGameModal(discord.ui.Modal, title="Join Game"):
 
         await thread.add_user(interaction.user)
 
-        # Determine rank from tier roles
+                # Determine rank from tier roles
         from config import TIER_ROLES, SUPPORT_FOOTER
+
         member = interaction.guild.get_member(interaction.user.id)
         if member is None:
             member = await interaction.guild.fetch_member(interaction.user.id)
+
         rank = "Unranked"
-        if member:
-            role_names = {r.name for r in member.roles}
-            for tier in TIER_ROLES:
-                if tier in role_names:
-                    rank = tier
-                    break
+        role_names = {role.name for role in member.roles}
+
+        for tier in TIER_ROLES:
+            if tier in role_names:
+                rank = tier
+                break
 
         joined_embed = discord.Embed(title="Player Joined", color=EMBED_COLOR)
         joined_embed.add_field(name="Display Name", value=player["display_name"], inline=False)

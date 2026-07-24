@@ -39,7 +39,7 @@ class JoinGameModal(discord.ui.Modal, title="Join Game"):
 
         await thread.add_user(interaction.user)
 
-                # Determine rank from tier roles
+                        # Determine rank from tier roles
         from config import TIER_ROLES, SUPPORT_FOOTER
 
         member = interaction.guild.get_member(interaction.user.id)
@@ -47,17 +47,32 @@ class JoinGameModal(discord.ui.Modal, title="Join Game"):
             member = await interaction.guild.fetch_member(interaction.user.id)
 
         rank = "Unranked"
-        role_names = {role.name for role in member.roles}
 
-        for tier in TIER_ROLES:
-            if tier in role_names:
-                rank = tier
+        for role in member.roles:
+            for tier in TIER_ROLES:
+                if tier.lower() in role.name.lower():
+                    rank = tier
+                    break
+            if rank != "Unranked":
                 break
 
-        joined_embed = discord.Embed(title="Player Joined", color=EMBED_COLOR)
-        joined_embed.add_field(name="Display Name", value=player["display_name"], inline=False)
-        joined_embed.add_field(name="Rank", value=rank, inline=False)
-        joined_embed.set_footer(text=f"Game ID: {self.game_id} • {SUPPORT_FOOTER}")
+        joined_embed = discord.Embed(
+            title="Player Joined",
+            color=EMBED_COLOR
+        )
+        joined_embed.add_field(
+            name="Display Name",
+            value=player["display_name"],
+            inline=False
+        )
+        joined_embed.add_field(
+            name="Rank",
+            value=rank,
+            inline=False
+        )
+        joined_embed.set_footer(
+            text=f"Game ID: {self.game_id} • {SUPPORT_FOOTER}"
+        )
         joined_embed.timestamp = discord.utils.utcnow()
 
         await thread.send(content=interaction.user.mention, embed=joined_embed)

@@ -42,8 +42,6 @@ class JoinGameModal(discord.ui.Modal, title="Join Game"):
         # Determine rank from tier roles
         from config import TIER_ROLES, SUPPORT_FOOTER
         member = interaction.guild.get_member(interaction.user.id)
-if member is None:
-    member = await interaction.guild.fetch_member(interaction.user.id)
         rank = "Unranked"
         if member:
             role_names = {r.name for r in member.roles}

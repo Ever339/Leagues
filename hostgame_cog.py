@@ -372,15 +372,13 @@ class HostGameCog(commands.Cog):
             )
         )
 
-        if len(game.get("players", [])) >= game.get("players_needed", 0):
-            games = load_games()
-            if gameid in games and not games[gameid].get("finished"):
-                games[gameid]["finished"] = True
-                games[gameid]["locked"] = True
-                save_games(games)
-                await thread.send(
-                    embed=discord.Embed(description="✅ This game is now full!", color=EMBED_COLOR)
+                if len(game.get("players", [])) >= game.get("players_needed", 0):
+            await thread.send(
+                embed=discord.Embed(
+                    description="✅ This game is now full!",
+                    color=EMBED_COLOR,
                 )
+            )
 
         await interaction.response.send_message(f"Added {player.mention} to the game.", ephemeral=True)
 

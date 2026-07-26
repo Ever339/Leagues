@@ -421,7 +421,7 @@ class HostGameCog(commands.Cog):
                 # Send to original hosting channel, not the thread
         hosting_channel = await get_channel(interaction.guild, game["channel"])
 
-        original_message = await hosting_channel.fetch_message(game["message"])
+        original_message = await hosting_channel.fetch_message(game["message_id"])
 
         await original_message.reply(
             content=ping_mention,

@@ -297,7 +297,7 @@ class HostGameCog(commands.Cog):
             )
             return
 
-                # Assign each tier a score
+        # Assign each tier a score
         tier_rank = {
             "Overlord": 9,
             "Dominator": 8,
@@ -310,7 +310,7 @@ class HostGameCog(commands.Cog):
             "Novice": 1,
         }
 
-                ranked = []
+        ranked = []
         for p in players:
             tier = get_player_tier(interaction.guild, p["id"])
             score = tier_rank.get(tier, 0)

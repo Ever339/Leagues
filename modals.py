@@ -80,7 +80,7 @@ class JoinGameModal(discord.ui.Modal, title="Join Game"):
             "You've joined the game! Head to the thread.", ephemeral=True
         )
 
-                remaining = game["players_needed"] - len(game["players"])
+        remaining = game["players_needed"] - len(game["players"])
 
         if remaining <= 0:
             await thread.send(

@@ -1,6 +1,6 @@
 import discord
 from config import EMBED_COLOR
-from games import get_game, add_player, load_games, save_games
+from games_storage import get_game, add_player, load_games, save_games
 
 
 class JoinGameModal(discord.ui.Modal, title="Join Game"):

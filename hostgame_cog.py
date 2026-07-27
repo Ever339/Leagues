@@ -45,22 +45,6 @@ def get_player_tier(guild: discord.Guild, user_id: int) -> str | None:
 def resolve_game(interaction: discord.Interaction):
     channel_id = interaction.channel_id
     games = load_games()
-
-    print("CURRENT CHANNEL ID:", channel_id)
-
-    for g_id, g_data in games.items():
-
-        print("CHECKING GAME:", g_id)
-
-        print("SAVED THREAD:", g_data.get("thread"), type(g_data.get("thread")))
-
-        print("CURRENT CHANNEL:", channel_id, type(channel_id))
-
-        if g_data.get("thread") == channel_id or g_data.get("channel") == channel_id:
-
-            print("MATCH FOUND!")
-
-            return g_id, g_data
     
     # 1. Try finding by thread or channel ID
     for g_id, g_data in games.items():
@@ -473,7 +457,7 @@ class HostGameCog(commands.Cog):
         # Send to original hosting channel, not the thread
         hosting_channel = await get_channel(interaction.guild, game["channel"])
 
-        original_message = await hosting_channel.fetch_message(game["message_id"])
+        original_message = await hosting_channel.fetch_message(game["message"])
 
         await original_message.reply(
             content=ping_mention,

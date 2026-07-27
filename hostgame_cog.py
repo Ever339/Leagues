@@ -47,7 +47,20 @@ def resolve_game(interaction: discord.Interaction):
     games = load_games()
 
     print("CURRENT CHANNEL ID:", channel_id)
-    print("SAVED GAMES:", games)
+
+    for g_id, g_data in games.items():
+
+        print("CHECKING GAME:", g_id)
+
+        print("SAVED THREAD:", g_data.get("thread"), type(g_data.get("thread")))
+
+        print("CURRENT CHANNEL:", channel_id, type(channel_id))
+
+        if g_data.get("thread") == channel_id or g_data.get("channel") == channel_id:
+
+            print("MATCH FOUND!")
+
+            return g_id, g_data
     
     # 1. Try finding by thread or channel ID
     for g_id, g_data in games.items():

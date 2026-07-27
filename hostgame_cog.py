@@ -45,13 +45,13 @@ def get_player_tier(guild: discord.Guild, user_id: int) -> str | None:
 def resolve_game(interaction: discord.Interaction):
     channel_id = interaction.channel_id
     games = load_games()
-    
+
     # 1. Try finding by thread or channel ID
     for g_id, g_data in games.items():
         if g_data.get("thread") == channel_id or g_data.get("channel") == channel_id:
             return g_id, g_data
-                
-        # 2. Try finding by host ID
+
+    # 2. Try finding by host ID
     for g_id, g_data in games.items():
         if g_data.get("host_id") == interaction.user.id and not g_data.get("finished"):
             return g_id, g_data
@@ -59,11 +59,10 @@ def resolve_game(interaction: discord.Interaction):
     # 3. Try finding by message ID
     if hasattr(interaction, "message") and interaction.message:
         for g_id, g_data in games.items():
-            if g_data.get("message_id") == interaction.message.id:
+            if g_data.get("message") == interaction.message.id:
                 return g_id, g_data
 
-    # 4. ULTIMATE FALLBACK: If you are running this inside a thread and storage is blank, 
-    # mock a game object so the command forces itself to work right now!
+    # 4. ULTIMATE FALLBACK
     if isinstance(interaction.channel, discord.Thread):
         mock_game_id = "FALLBACK"
         mock_game = {
@@ -79,8 +78,6 @@ def resolve_game(interaction: discord.Interaction):
         return mock_game_id, mock_game
 
     return None, None
-
-
 
 
 async def get_thread(interaction: discord.Interaction, game: dict) -> discord.Thread:

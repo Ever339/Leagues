@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 import random
 import string
+from itertools import combinations
 
 from config import (
     GAME_TYPES, MATCH_TYPES, REGIONS, THREAD_NAME, EMBED_COLOR,
@@ -296,25 +297,50 @@ class HostGameCog(commands.Cog):
             )
             return
 
-        # Assign each player a numeric tier rank (higher = better)
-        tier_rank = {t: len(TIER_ROLES) - i for i, t in enumerate(TIER_ROLES)}
+                # Assign each tier a score
+        tier_rank = {
+            "Overlord": 9,
+            "Dominator": 8,
+            "Alpha": 7,
+            "Phantom": 6,
+            "Skilled": 5,
+            "Rampage": 4,
+            "Improving": 3,
+            "Initiate": 2,
+            "Novice": 1,
+        }
 
-        ranked = []
+                ranked = []
         for p in players:
             tier = get_player_tier(interaction.guild, p["id"])
-            ranked.append((p, tier, tier_rank.get(tier, 0)))
+            score = tier_rank.get(tier, 0)
+            ranked.append((p, tier, score))
 
-        random.shuffle(ranked)
-        ranked.sort(key=lambda x: x[2], reverse=True)
+        # Always sort the same way
+        ranked.sort(key=lambda x: (-x[2], x[0]["id"]))
+        
+        team_size = len(ranked) // 2
 
-        team_a, team_b = [], []
-        for i, (p, tier, _) in enumerate(ranked):
-            pair = i // 2
-            goes_to_a = (pair % 2 == 0 and i % 2 == 0) or (pair % 2 == 1 and i % 2 == 1)
-            if goes_to_a:
-                team_a.append((p, tier))
-            else:
-                team_b.append((p, tier))
+        best_team_a = None
+        best_team_b = None
+        smallest_diff = float("inf")
+
+        for combo in combinations(ranked, team_size):
+            team_a = list(combo)
+            team_b = [player for player in ranked if player not in team_a]
+
+            score_a = sum(player[2] for player in team_a)
+            score_b = sum(player[2] for player in team_b)
+
+            diff = abs(score_a - score_b)
+
+            if diff < smallest_diff:
+                smallest_diff = diff
+                best_team_a = team_a
+                best_team_b = team_b
+
+        team_a = [(p, tier) for p, tier, _ in best_team_a]
+        team_b = [(p, tier) for p, tier, _ in best_team_b]
 
         def fmt(entry):
             p, tier = entry

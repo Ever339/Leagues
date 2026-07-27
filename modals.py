@@ -80,16 +80,12 @@ class JoinGameModal(discord.ui.Modal, title="Join Game"):
             "You've joined the game! Head to the thread.", ephemeral=True
         )
 
-        remaining = game["players_needed"] - len(game["players"])
+                remaining = game["players_needed"] - len(game["players"])
+
         if remaining <= 0:
-            games = load_games()
-            if self.game_id in games and not games[self.game_id].get("finished"):
-                games[self.game_id]["finished"] = True
-                games[self.game_id]["locked"] = True
-                save_games(games)
-                await thread.send(
-                    embed=discord.Embed(
-                        description="✅ This game is full. Use /endgame when the match is done.",
-                        color=EMBED_COLOR,
-                    )
+            await thread.send(
+                embed=discord.Embed(
+                    description="✅ This game is full. Use /endgame when the match is done.",
+                    color=EMBED_COLOR,
                 )
+            )

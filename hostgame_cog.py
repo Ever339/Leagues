@@ -362,7 +362,7 @@ class HostGameCog(commands.Cog):
         add_player(gameid, {"id": player.id, "display_name": player.display_name})
         game = get_game(gameid)
 
-                thread = await get_thread(interaction, game)
+        thread = await get_thread(interaction, game)
         await thread.add_user(player)
 
         await thread.send(

@@ -412,7 +412,6 @@ class HostGameCog(commands.Cog):
             ephemeral=True,
         )
 
-
     # ─── /sub ─────────────────────────────────────────────────────────────────
 
     @app_commands.command(name="sub", description="Announce that you need a substitute for the game.")

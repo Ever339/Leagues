@@ -364,7 +364,7 @@ class HostGameCog(commands.Cog):
 
         thread = await get_thread(interaction, game)
         await thread.add_user(player)
-        await thread.send(
+                await thread.send(
             embed=discord.Embed(
                 title="Player Added",
                 description=f"{player.mention} was added by {interaction.user.mention}.",
@@ -372,7 +372,7 @@ class HostGameCog(commands.Cog):
             )
         )
 
-                if len(game.get("players", [])) >= game.get("players_needed", 0):
+        if len(game.get("players", [])) >= game.get("players_needed", 0):
             await thread.send(
                 embed=discord.Embed(
                     description="✅ This game is now full!",

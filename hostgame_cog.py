@@ -460,16 +460,13 @@ class HostGameCog(commands.Cog):
 
         original_message = await hosting_channel.fetch_message(game["message"])
 
-        print("ABOUT TO SEND SUB REPLY")
-
         await original_message.reply(
             content=ping_mention,
             embed=sub_embed,
+            view=JoinButton(gameid),
             allowed_mentions=discord.AllowedMentions(roles=True),
             mention_author=False,
         )
-
-        print("SUB REPLY SENT")
 
         await interaction.response.send_message(
             "Sub announcement posted.",

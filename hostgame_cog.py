@@ -365,20 +365,20 @@ class HostGameCog(commands.Cog):
         thread = await get_thread(interaction, game)
         await thread.add_user(player)
                 await thread.send(
-            embed=discord.Embed(
-                title="Player Added",
-                description=f"{player.mention} was added by {interaction.user.mention}.",
-                color=EMBED_COLOR,
-            )
-        )
+    embed=discord.Embed(
+        title="Player Added",
+        description=f"{player.mention} was added by {interaction.user.mention}.",
+        color=EMBED_COLOR,
+    )
+)
 
-        if len(game.get("players", [])) >= game.get("players_needed", 0):
-            await thread.send(
-                embed=discord.Embed(
-                    description="✅ This game is now full!",
-                    color=EMBED_COLOR,
-                )
-            )
+if len(game.get("players", [])) >= game.get("players_needed", 0):
+    await thread.send(
+        embed=discord.Embed(
+            description="✅ This game is now full!",
+            color=EMBED_COLOR,
+        )
+    )
 
         await interaction.response.send_message(f"Added {player.mention} to the game.", ephemeral=True)
 
@@ -418,7 +418,6 @@ class HostGameCog(commands.Cog):
         sub_embed.timestamp = discord.utils.utcnow()
 
         # Send to original hosting channel, not the thread
-                # Send to original hosting channel, not the thread
         hosting_channel = await get_channel(interaction.guild, game["channel"])
 
         original_message = await hosting_channel.fetch_message(game["message_id"])

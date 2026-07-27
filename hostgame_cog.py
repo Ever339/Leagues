@@ -419,7 +419,7 @@ class HostGameCog(commands.Cog):
     # ─── /sub ─────────────────────────────────────────────────────────────────
 
         @app_commands.command(name="sub", description="Announce that you need a substitute for the game.")
-    async def sub(self, interaction: discord.Interaction):
+        async def sub(self, interaction: discord.Interaction):
         gameid, game = resolve_game(interaction)
 
         print("SUB DEBUG GAMEID:", gameid)

@@ -45,6 +45,9 @@ def get_player_tier(guild: discord.Guild, user_id: int) -> str | None:
 def resolve_game(interaction: discord.Interaction):
     channel_id = interaction.channel_id
     games = load_games()
+
+    print("CURRENT CHANNEL ID:", channel_id)
+    print("SAVED GAMES:", games)
     
     # 1. Try finding by thread or channel ID
     for g_id, g_data in games.items():

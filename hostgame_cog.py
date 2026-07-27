@@ -100,9 +100,10 @@ class HostGameCog(commands.Cog):
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
 
-        allowed_roles = {"League Department", "League Host", "Director"}
+        allowed_roles = {"league department", "league host", "director"}
+        user_roles = {role.name.lower() for role in interaction.user.roles}
 
-        if any(role.name in allowed_roles for role in interaction.user.roles):
+        if user_roles & allowed_roles:
 
             return True
 

@@ -51,12 +51,18 @@ def resolve_game(interaction: discord.Interaction):
         if g_data.get("thread") == channel_id or g_data.get("channel") == channel_id:
             return g_id, g_data
                 
-    # 2. Try finding by host ID
+        # 2. Try finding by host ID
     for g_id, g_data in games.items():
         if g_data.get("host_id") == interaction.user.id and not g_data.get("finished"):
             return g_id, g_data
 
-    # 3. ULTIMATE FALLBACK: If you are running this inside a thread and storage is blank, 
+    # 3. Try finding by message ID
+    if hasattr(interaction, "message") and interaction.message:
+        for g_id, g_data in games.items():
+            if g_data.get("message_id") == interaction.message.id:
+                return g_id, g_data
+
+    # 4. ULTIMATE FALLBACK: If you are running this inside a thread and storage is blank, 
     # mock a game object so the command forces itself to work right now!
     if isinstance(interaction.channel, discord.Thread):
         mock_game_id = "FALLBACK"

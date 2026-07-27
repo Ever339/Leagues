@@ -507,12 +507,16 @@ class HostGameCog(commands.Cog):
         )
 
         games = load_games()
+
         if gameid in games:
-            games[gameid]["finished"] = False
-            games[gameid]["locked"] = False
+            games[gameid]["finished"] = True
+            games[gameid]["locked"] = True
             save_games(games)
 
-        await interaction.response.send_message(f"Removed {player.mention}.", ephemeral=True)
+        thread = await get_thread(interaction, game)
+
+        await interaction.response.send_message("Game ended.", ephemeral=True)
+        await thread.delete()
 
 
 async def setup(bot):

@@ -362,23 +362,29 @@ class HostGameCog(commands.Cog):
         add_player(gameid, {"id": player.id, "display_name": player.display_name})
         game = get_game(gameid)
 
-        thread = await get_thread(interaction, game)
+                thread = await get_thread(interaction, game)
         await thread.add_user(player)
-                await thread.send(
-    embed=discord.Embed(
-        title="Player Added",
-        description=f"{player.mention} was added by {interaction.user.mention}.",
-        color=EMBED_COLOR,
-    )
-)
 
-if len(game.get("players", [])) >= game.get("players_needed", 0):
-    await thread.send(
-        embed=discord.Embed(
-            description="✅ This game is now full!",
-            color=EMBED_COLOR,
+        await thread.send(
+            embed=discord.Embed(
+                title="Player Added",
+                description=f"{player.mention} was added by {interaction.user.mention}.",
+                color=EMBED_COLOR,
+            )
         )
-    )
+
+        if len(game.get("players", [])) >= game.get("players_needed", 0):
+            await thread.send(
+                embed=discord.Embed(
+                    description="✅ This game is now full!",
+                    color=EMBED_COLOR,
+                )
+            )
+
+        await interaction.response.send_message(
+            f"Added {player.mention} to the game.",
+            ephemeral=True,
+        )
 
         await interaction.response.send_message(f"Added {player.mention} to the game.", ephemeral=True)
 

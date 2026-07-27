@@ -453,10 +453,10 @@ class HostGameCog(commands.Cog):
 
                 # Send to original hosting channel, not the thread
         hosting_channel = await get_channel(interaction.guild, game["channel"])
-        print("SUB CHANNEL:", hosting_channel)
 
         original_message = await hosting_channel.fetch_message(game["message"])
-        print("SUB MESSAGE FOUND:", original_message.id)
+
+                print("ABOUT TO SEND SUB REPLY")
 
         await original_message.reply(
             content=ping_mention,
@@ -464,6 +464,8 @@ class HostGameCog(commands.Cog):
             allowed_mentions=discord.AllowedMentions(roles=True),
             mention_author=False,
         )
+
+        print("SUB REPLY SENT")
 
         await interaction.response.send_message(
             "Sub announcement posted.",

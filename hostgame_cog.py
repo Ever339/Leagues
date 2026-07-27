@@ -416,11 +416,12 @@ class HostGameCog(commands.Cog):
             ephemeral=True,
         )
 
-        # ─── /sub ─────────────────────────────────────────────────────────────────
+            # ─── /sub ─────────────────────────────────────────────────────────────────
 
     @app_commands.command(name="sub", description="Announce that you need a substitute for the game.")
     async def sub(self, interaction: discord.Interaction):
         gameid, game = resolve_game(interaction)
+
         if not game:
             await interaction.response.send_message(
                 "This command only works inside a game thread.", ephemeral=True
@@ -428,7 +429,9 @@ class HostGameCog(commands.Cog):
             return
 
         if not is_host_or_staff(interaction, game):
-            await interaction.response.send_message("Only the host can call for a sub.", ephemeral=True)
+            await interaction.response.send_message(
+                "Only the host can call for a sub.", ephemeral=True
+            )
             return
 
         spots_remaining = game.get("players_needed", 0) - len(game.get("players", []))
@@ -448,15 +451,16 @@ class HostGameCog(commands.Cog):
             ),
             color=EMBED_COLOR,
         )
+
         sub_embed.set_footer(text=f"Game ID: {gameid}")
         sub_embed.timestamp = discord.utils.utcnow()
 
-                # Send to original hosting channel, not the thread
+        # Send to original hosting channel, not the thread
         hosting_channel = await get_channel(interaction.guild, game["channel"])
 
         original_message = await hosting_channel.fetch_message(game["message"])
 
-                print("ABOUT TO SEND SUB REPLY")
+        print("ABOUT TO SEND SUB REPLY")
 
         await original_message.reply(
             content=ping_mention,

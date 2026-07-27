@@ -412,7 +412,6 @@ class HostGameCog(commands.Cog):
             ephemeral=True,
         )
 
-        await interaction.response.send_message(f"Added {player.mention} to the game.", ephemeral=True)
 
     # ─── /sub ─────────────────────────────────────────────────────────────────
 

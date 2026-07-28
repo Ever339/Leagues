@@ -56,13 +56,7 @@ def resolve_game(interaction: discord.Interaction):
         if g_data.get("host_id") == interaction.user.id and not g_data.get("finished"):
             return g_id, g_data
 
-    # 3. Try finding by message ID
-    if hasattr(interaction, "message") and interaction.message:
-        for g_id, g_data in games.items():
-            if g_data.get("message") == interaction.message.id:
-                return g_id, g_data
-
-    # 4. ULTIMATE FALLBACK
+    # 3. ULTIMATE FALLBACK
     if isinstance(interaction.channel, discord.Thread):
         mock_game_id = "FALLBACK"
         mock_game = {
@@ -104,8 +98,8 @@ class HostGameCog(commands.Cog):
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
 
         allowed_roles = {"league department", "league host", "director"}
-        user_roles = {role.name.lower().split("|")[-1].strip() for role in interaction.user.roles}
-        
+        user_roles = {role.name.lower() for role in interaction.user.roles}
+
         if user_roles & allowed_roles:
 
             return True
@@ -416,20 +410,21 @@ class HostGameCog(commands.Cog):
             ephemeral=True,
         )
 
-            # ─── /sub ─────────────────────────────────────────────────────────────────
+    # ─── /sub ─────────────────────────────────────────────────────────────────
 
     @app_commands.command(name="sub", description="Announce that you need a substitute for the game.")
     async def sub(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        
         gameid, game = resolve_game(interaction)
-        print("========== /sub START ==========")
         if not game:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "This command only works inside a game thread.", ephemeral=True
             )
             return
 
         if not is_host_or_staff(interaction, game):
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "Only the host can call for a sub.", ephemeral=True
             )
             return
@@ -451,29 +446,31 @@ class HostGameCog(commands.Cog):
             ),
             color=EMBED_COLOR,
         )
-
         sub_embed.set_footer(text=f"Game ID: {gameid}")
         sub_embed.timestamp = discord.utils.utcnow()
 
-        # Send to original hosting channel, not the thread
-        hosting_channel = await get_channel(interaction.guild, game["channel"])
+        try:
+            # Send to original hosting channel, not the thread
+            hosting_channel = await get_channel(interaction.guild, game["channel"])
+            original_message = await hosting_channel.fetch_message(game["message_id"])
 
-        original_message = await hosting_channel.fetch_message(game["message"])
-        
-        print("Posting sub announcement")
-        
-        await original_message.reply(
-            content=ping_mention,
-            embed=sub_embed,
-            view=JoinButton(gameid),
-            allowed_mentions=discord.AllowedMentions(roles=True),
-            mention_author=False,
-        )
+            await original_message.reply(
+                content=ping_mention,
+                embed=sub_embed,
+                allowed_mentions=discord.AllowedMentions(roles=True),
+                mention_author=False,
+            )
 
-        await interaction.response.send_message(
-            "Sub announcement posted.",
-            ephemeral=True,
-        )
+            await interaction.followup.send(
+                "Sub announcement posted.",
+                ephemeral=True,
+            )
+        except Exception as e:
+            print(f"[ERROR] /sub failed: {e}")
+            await interaction.followup.send(
+                f"Failed to post sub announcement: {str(e)}",
+                ephemeral=True,
+            )
 
     # ─── /remove ──────────────────────────────────────────────────────────────
 
@@ -509,16 +506,12 @@ class HostGameCog(commands.Cog):
         )
 
         games = load_games()
-
         if gameid in games:
             games[gameid]["finished"] = False
             games[gameid]["locked"] = False
             save_games(games)
 
-        await interaction.response.send_message(
-            f"Removed {player.mention}.",
-            ephemeral=True,
-        )
+        await interaction.response.send_message(f"Removed {player.mention}.", ephemeral=True)
 
 
 async def setup(bot):

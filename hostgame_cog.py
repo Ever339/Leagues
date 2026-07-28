@@ -91,10 +91,9 @@ async def get_channel(guild: discord.Guild, channel_id: int) -> discord.TextChan
 class HostGameCog(commands.Cog):
 
     def __init__(self, bot):
-
         self.bot = bot
 
-        async def interaction_check(self, interaction: discord.Interaction) -> bool:
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
         allowed_roles = {
             "league department",
             "league host",

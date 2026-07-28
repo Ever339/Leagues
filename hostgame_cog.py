@@ -97,10 +97,19 @@ class HostGameCog(commands.Cog):
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
 
-        allowed_roles = {"league department", "league host", "director"}
-        if any(role.name.lower().strip() in allowed_roles for role in interaction.user.roles):
+    allowed_roles = {
+        "league department",
+        "league host",
+        "director"
+    }
 
-            return True
+    user_roles = [role.name.lower().strip() for role in interaction.user.roles]
+
+    if any(role in allowed_roles for role in user_roles):
+        return True
+
+    # allow game host/staff checks to handle it later
+    return True
 
         await interaction.response.send_message(
 

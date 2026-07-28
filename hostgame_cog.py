@@ -93,11 +93,6 @@ class HostGameCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    class HostGameCog(commands.Cog):
-
-    def __init__(self, bot):
-        self.bot = bot
-
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         allowed_roles = [
             "league department",

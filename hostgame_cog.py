@@ -421,7 +421,7 @@ class HostGameCog(commands.Cog):
     @app_commands.command(name="sub", description="Announce that you need a substitute for the game.")
     async def sub(self, interaction: discord.Interaction):
         gameid, game = resolve_game(interaction)
-
+        print(f"/sub executed by {interaction.user} in channel {interaction.channel.id}")
         if not game:
             await interaction.response.send_message(
                 "This command only works inside a game thread.", ephemeral=True

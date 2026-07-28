@@ -32,7 +32,7 @@ def create_game(game_id, host_id, host_name, gametype, matchtype, region, vip,
         "matchtype": matchtype, "region": region, "vip": vip,
         "thread": thread_id, "message": message_id, "channel": channel_id,
         "players_needed": players_needed, "players": [],
-        "finished": False, "locked": False,
+        "finished": False, "locked": False, "message_id": message_id,
     }
     save_games(games)
 

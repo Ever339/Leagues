@@ -88,35 +88,25 @@ async def get_channel(guild: discord.Guild, channel_id: int) -> discord.TextChan
     return channel
 
 
-
 class HostGameCog(commands.Cog):
 
     def __init__(self, bot):
 
         self.bot = bot
 
-    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        allowed_roles = {
+            "league department",
+            "league host",
+            "director"
+        }
 
-    allowed_roles = {
-        "league department",
-        "league host",
-        "director"
-    }
-
-    user_roles = [role.name.lower().strip() for role in interaction.user.roles]
-
-    if any(role in allowed_roles for role in user_roles):
-        return True
-
-    # allow game host/staff checks to handle it later
-    return True
+        if any(role.name.lower().strip() in allowed_roles for role in interaction.user.roles):
+            return True
 
         await interaction.response.send_message(
-
             "❌ You don't have permission to use this command.",
-
             ephemeral=True
-
         )
 
         return False

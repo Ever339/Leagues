@@ -93,15 +93,21 @@ class HostGameCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    class HostGameCog(commands.Cog):
+
+    def __init__(self, bot):
+        self.bot = bot
+
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        allowed_roles = {
+        allowed_roles = [
             "league department",
             "league host",
             "director"
-        }
+        ]
 
-        if any(role.name.lower().strip() in allowed_roles for role in interaction.user.roles):
-            return True
+        for role in interaction.user.roles:
+            if any(allowed in role.name.lower() for allowed in allowed_roles):
+                return True
 
         await interaction.response.send_message(
             "❌ You don't have permission to use this command.",

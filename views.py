@@ -17,15 +17,6 @@ class JoinButton(discord.ui.View):
     async def join(self, interaction: discord.Interaction, button: discord.ui.Button):
         game = get_game(self.game_id)
 
-        allowed_roles = {"LXY", "LXY+"}
-
-        if not any(role.name in allowed_roles for role in interaction.user.roles):
-            await interaction.response.send_message(
-                "❌ You must have the **LXY** or **LXY+** role to join League games.",
-                ephemeral=True,
-            )
-            return
-
         if not game:
             await interaction.response.send_message("This game has ended.", ephemeral=True)
             return

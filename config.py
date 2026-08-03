@@ -9,15 +9,16 @@ THREAD_NAME = "{match} ({gametype}) [{gameid}]"
 PING_ROLE_NAME = "Leagues"
 SUPPORT_FOOTER = "Issues? Contact the host"
 TIER_ROLES = [
-    "Overlord",
-    "Dominator",
-    "Alpha",
-    "Phantom",
-    "Skilled",
-    "Rampage",
-    "Improving",
-    "Initiate",
-    "Novice",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7",
+    "G8",
+    "G9",
+    "G10",
 ]
 GAME_TYPES = ["1s", "2s", "3s", "4s"]
 MATCH_TYPES = ["Default Loadout", "Custom Loadout"]
